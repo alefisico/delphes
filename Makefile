@@ -20,7 +20,7 @@ DISPLAY_LIBS = $(shell $(RC) --evelibs) -lGuiHtml $(SYSLIBS)
 
 ifneq ($(CMSSW_FWLITE_INCLUDE_PATH),)
 HAS_CMSSW = true
-CXXFLAGS += -std=c++0x -I$(subst :, -I,$(CMSSW_FWLITE_INCLUDE_PATH))
+CXXFLAGS += -std=c++1y -I$(subst :, -I,$(CMSSW_FWLITE_INCLUDE_PATH))
 OPT_LIBS += -L$(subst include,lib,$(subst :, -L,$(CMSSW_FWLITE_INCLUDE_PATH)))
 ifneq ($(CMSSW_RELEASE_BASE),)
 CXXFLAGS += -I$(CMSSW_RELEASE_BASE)/src
@@ -1278,6 +1278,12 @@ tmp/external/fastjet/TilingExtent.$(ObjSuf): \
 tmp/external/fastjet/Voronoi.$(ObjSuf): \
 	external/fastjet/Voronoi.$(SrcSuf) \
 	external/fastjet/internal/Voronoi.hh
+tmp/external/fastjet/contribs/HEPTopTagger/HEPTopTagger.$(ObjSuf): \
+	external/fastjet/contribs/HEPTopTagger/HEPTopTagger.$(SrcSuf)
+tmp/external/fastjet/contribs/HEPTopTagger/qjets/QjetsPlugin.$(ObjSuf): \
+	external/fastjet/contribs/HEPTopTagger/qjets/QjetsPlugin.$(SrcSuf)
+tmp/external/fastjet/contribs/HEPTopTagger/qjets/Qjets.$(ObjSuf): \
+	external/fastjet/contribs/HEPTopTagger/qjets/Qjets.$(SrcSuf)
 tmp/external/fastjet/contribs/Nsubjettiness/AxesDefinition.$(ObjSuf): \
 	external/fastjet/contribs/Nsubjettiness/AxesDefinition.$(SrcSuf)
 tmp/external/fastjet/contribs/Nsubjettiness/ExtraRecombiners.$(ObjSuf): \
@@ -1441,6 +1447,7 @@ tmp/modules/FastJetFinder.$(ObjSuf): \
 	external/fastjet/plugins/SISCone/fastjet/SISConePlugin.hh \
 	external/fastjet/plugins/CDFCones/fastjet/CDFMidPointPlugin.hh \
 	external/fastjet/plugins/CDFCones/fastjet/CDFJetCluPlugin.hh \
+	external/fastjet/contribs/HEPTopTagger/HEPTopTagger.hh \
 	external/fastjet/contribs/Nsubjettiness/Nsubjettiness.hh \
 	external/fastjet/contribs/Nsubjettiness/Njettiness.hh \
 	external/fastjet/contribs/Nsubjettiness/NjettinessPlugin.hh \
@@ -1526,6 +1533,9 @@ FASTJET_OBJ +=  \
 	tmp/external/fastjet/Selector.$(ObjSuf) \
 	tmp/external/fastjet/TilingExtent.$(ObjSuf) \
 	tmp/external/fastjet/Voronoi.$(ObjSuf) \
+	tmp/external/fastjet/contribs/HEPTopTagger/HEPTopTagger.$(ObjSuf) \
+	tmp/external/fastjet/contribs/HEPTopTagger/qjets/QjetsPlugin.$(ObjSuf) \
+	tmp/external/fastjet/contribs/HEPTopTagger/qjets/Qjets.$(ObjSuf) \
 	tmp/external/fastjet/contribs/Nsubjettiness/AxesDefinition.$(ObjSuf) \
 	tmp/external/fastjet/contribs/Nsubjettiness/ExtraRecombiners.$(ObjSuf) \
 	tmp/external/fastjet/contribs/Nsubjettiness/MeasureDefinition.$(ObjSuf) \
@@ -1587,7 +1597,7 @@ FASTJET_OBJ +=  \
 
 ifeq ($(HAS_PYTHIA8),true)
 FASTJET_OBJ +=  \
-	
+
 endif
 
 tmp/display/Delphes3DGeometry.$(ObjSuf): \
@@ -1635,7 +1645,7 @@ DISPLAY_OBJ +=  \
 
 ifeq ($(HAS_PYTHIA8),true)
 DISPLAY_OBJ +=  \
-	
+
 endif
 
 tmp/external/tcl/panic.$(ObjSuf): \
@@ -1928,6 +1938,19 @@ display/DelphesBranchElement.h: \
 external/fastjet/contribs/Nsubjettiness/NjettinessPlugin.hh: \
 	external/fastjet/ClusterSequence.hh \
 	external/fastjet/JetDefinition.hh
+	@touch $@
+
+external/fastjet/contribs/HEPTopTagger/qjets/Qjets.hh: \
+	external/fastjet/ClusterSequence.hh \
+	external/fastjet/PseudoJet.hh \
+	external/fastjet/JetDefinition.hh
+	@touch $@
+
+external/fastjet/contribs/HEPTopTagger/HEPTopTagger.hh: \
+	external/fastjet/ClusterSequence.hh \
+	external/fastjet/PseudoJet.hh \
+	external/fastjet/tools/Pruner.hh \
+	external/fastjet/tools/Filter.hh
 	@touch $@
 
 external/fastjet/internal/DynamicNearestNeighbours.hh: \
@@ -2374,5 +2397,3 @@ $(EXECUTABLE): %$(ExeSuf): $(DELPHES_DICT_OBJ) $(FASTJET_DICT_OBJ) $(DELPHES_OBJ
 	@$(LD) $(LDFLAGS) $^ $(DELPHES_LIBS) $(OutPutOpt)$@
 
 ###
-
-
