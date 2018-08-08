@@ -164,7 +164,7 @@ Candidate::Candidate() :
   HTT_isTagged(0),
   HTT_prunedMass(0.0),
   HTT_unfilteredMass(0.0),
-  HTT_fRec(0.0),
+  HTT_fRec(-1.0),
   HTT_Ropt(0.0),
   HTT_Ropt_calc(0.0),
   fFactory(0),
@@ -198,7 +198,7 @@ Candidate::Candidate() :
   }
 
   HTT_topCandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);
-  /*HTT_bCandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);  /// apparently does not work 
+  /*HTT_bCandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);  /// apparently does not work
   HTT_WCandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);
   HTT_W1CandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);
   HTT_W2CandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);*/

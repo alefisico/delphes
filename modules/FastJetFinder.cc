@@ -592,13 +592,18 @@ void FastJetFinder::Process()
       tagger.set_filtering_n(5);
       tagger.set_filtering_minpt_subjet(30.);
 
+      // Optimal R
+      tagger.do_optimalR(true);
+      //tagger.set_optimalR_reject_minimum(optRrejectMin_);
+
       // How to select among candidates
       tagger.set_mode(HEPTopTagger::TWO_STEP_FILTER);
 
       // Requirements to accept a candidate
       tagger.set_top_minpt(200);
-      tagger.set_top_mass_range(150., 200.);
-      tagger.set_fw(0.15);
+      tagger.set_top_mass_range(0., 1000.);
+      tagger.set_mass_ratio_cut(0., 0., 2.);
+      tagger.set_mass_ratio_range(0.46, 0.933);
 
       tagger.run();
 
@@ -606,7 +611,6 @@ void FastJetFinder::Process()
       candidate->HTT_isTagged = tagger.is_tagged();
       candidate->HTT_prunedMass = tagger.pruned_mass();
       candidate->HTT_unfilteredMass = tagger.unfiltered_mass();
-      //candidate->HTT_fRec = tagger.f_rec();
 
 
       fastjet::PseudoJet topCandidate = tagger.t();
@@ -628,6 +632,7 @@ void FastJetFinder::Process()
 
       candidate->HTT_Ropt = tagger.Ropt();
       candidate->HTT_Ropt_calc = tagger.Ropt_calc();
+      //candidate->HTT_fRec = tagger.f_rec();
 
       //if ( tagger.is_tagged() ){
       //cout << "pt " << tagger.t().perp() << " " << tagger.is_maybe_top() << std::endl;
