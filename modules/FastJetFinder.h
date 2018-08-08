@@ -135,6 +135,10 @@ private:
   // -- voronoi areas --
   Double_t fEffectiveRfact;
 
+  //-- HEPTopTagger parameters --
+
+  Bool_t fComputeHEPTopTagger;
+
 #if !defined(__CINT__) && !defined(__CLING__)
   struct TEstimatorStruct
   {

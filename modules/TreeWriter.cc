@@ -701,10 +701,15 @@ void TreeWriter::ProcessJets(ExRootTreeBranch *branch, TObjArray *array)
     entry->ExclYmerge23 = candidate->ExclYmerge23;
     entry->ExclYmerge34 = candidate->ExclYmerge34;
     entry->ExclYmerge45 = candidate->ExclYmerge45;
-    entry->ExclYmerge56 = candidate->ExclYmerge56;    
-
+    entry->ExclYmerge56 = candidate->ExclYmerge56;
 
     FillParticles(candidate, &entry->Particles);
+
+    // HEPTopTagger
+    //std::cout << candidate->IsTop << '\n';
+    entry->IsTop = candidate->IsTop;
+    //entry->ExclYmerge56 = candidate->IsTop;
+
   }
 }
 

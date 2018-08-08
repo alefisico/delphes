@@ -71,6 +71,8 @@
 #include "fastjet/tools/Pruner.hh"
 #include "fastjet/contribs/RecursiveTools/SoftDrop.hh"
 
+#include "fastjet/contribs/HEPTopTagger/HEPTopTagger.hh"
+
 using namespace std;
 using namespace fastjet;
 using namespace fastjet::contrib;
@@ -119,7 +121,7 @@ void FastJetFinder::Init()
 
   fJetPTMin = GetDouble("JetPTMin", 10.0);
 
- 
+
   //-- N(sub)jettiness parameters --
 
   fComputeNsubjettiness = GetBool("ComputeNsubjettiness", false);
@@ -129,16 +131,16 @@ void FastJetFinder::Init()
   fN = GetInt("N", 2);                  // used only if Njettiness is used as jet clustering algo (case 8)
 
   //-- Exclusive clustering for e+e- collisions --
-  
+
   fNJets = GetInt("NJets",2);
   fExclusiveClustering = GetBool("ExclusiveClustering", false);
 
   //-- Valencia Linear Collider algorithm
   fGamma = GetDouble("Gamma", 1.0);
   //fBeta parameter see above
-  
+
   fMeasureDef = new NormalizedMeasure(fBeta, fParameterR);
-   
+
   switch(fAxisMode)
   {
     default:
@@ -156,26 +158,26 @@ void FastJetFinder::Init()
    }
 
   //-- Trimming parameters --
-  
+
   fComputeTrimming = GetBool("ComputeTrimming", false);
   fRTrim = GetDouble("RTrim", 0.2);
   fPtFracTrim = GetDouble("PtFracTrim", 0.05);
-  
+
 
   //-- Pruning parameters --
-  
+
   fComputePruning = GetBool("ComputePruning", false);
   fZcutPrun = GetDouble("ZcutPrun", 0.1);
   fRcutPrun = GetDouble("RcutPrun", 0.5);
   fRPrun = GetDouble("RPrun", 0.8);
- 
+
   //-- SoftDrop parameters --
-  
+
   fComputeSoftDrop     = GetBool("ComputeSoftDrop", false);
   fBetaSoftDrop        = GetDouble("BetaSoftDrop", 0.0);
   fSymmetryCutSoftDrop = GetDouble("SymmetryCutSoftDrop", 0.1);
   fR0SoftDrop= GetDouble("R0SoftDrop=", 0.8);
-  
+
 
   // ---  Jet Area Parameters ---
   fAreaAlgorithm = GetInt("AreaAlgorithm", 0);
@@ -191,6 +193,10 @@ void FastJetFinder::Init()
 
   // - voronoi based areas -
   fEffectiveRfact = GetDouble("EffectiveRfact", 1.0);
+
+  //-- HEPTopTagger parameters --
+
+  fComputeHEPTopTagger = GetBool("ComputeHEPTopTagger", false);
 
   switch(fAreaAlgorithm)
   {
@@ -254,7 +260,7 @@ void FastJetFinder::Init()
 
   }
 
-   
+
 
   fPlugin = plugin;
   fRecomb = recomb;
@@ -324,7 +330,7 @@ void FastJetFinder::Process()
   Double_t deta, dphi, detaMax, dphiMax;
   Double_t time, timeWeight;
   Int_t number, ncharged, nneutrals;
-  Int_t charge; 
+  Int_t charge;
   Double_t rho = 0.0;
   PseudoJet jet, area;
   ClusterSequence *sequence;
@@ -335,7 +341,8 @@ void FastJetFinder::Process()
   Double_t excl_ymerge34 = 0.0;
   Double_t excl_ymerge45 = 0.0;
   Double_t excl_ymerge56 = 0.0;
-  
+  Int_t tmpIsTop = 0;
+
   DelphesFactory *factory = GetFactory();
 
   inputList.clear();
@@ -380,7 +387,7 @@ void FastJetFinder::Process()
 
   outputList.clear();
 
-  
+
   if(fExclusiveClustering)
     {
    try{
@@ -404,7 +411,7 @@ void FastJetFinder::Process()
   // loop over all jets and export them
   detaMax = 0.0;
   dphiMax = 0.0;
-  
+
   for(itOutputList = outputList.begin(); itOutputList != outputList.end(); ++itOutputList)
   {
     jet = *itOutputList;
@@ -416,7 +423,7 @@ void FastJetFinder::Process()
     if(fAreaDefinition) area = itOutputList->area_4vector();
 
 
-    
+
     candidate = factory->NewCandidate();
 
     time = 0.0;
@@ -457,7 +464,7 @@ void FastJetFinder::Process()
 
     candidate->DeltaEta = detaMax;
     candidate->DeltaPhi = dphiMax;
-    candidate->Charge = charge; 
+    candidate->Charge = charge;
     candidate->NNeutrals = nneutrals;
     candidate->NCharged = ncharged;
 
@@ -467,7 +474,7 @@ void FastJetFinder::Process()
     candidate->ExclYmerge34 = excl_ymerge34;
     candidate->ExclYmerge45 = excl_ymerge45;
     candidate->ExclYmerge56 = excl_ymerge56;
-    
+
     //------------------------------------
     // Trimming
     //------------------------------------
@@ -477,31 +484,31 @@ void FastJetFinder::Process()
 
       fastjet::Filter    trimmer(fastjet::JetDefinition(fastjet::kt_algorithm,fRTrim),fastjet::SelectorPtFractionMin(fPtFracTrim));
       fastjet::PseudoJet trimmed_jet = trimmer(*itOutputList);
-      
+
       trimmed_jet = join(trimmed_jet.constituents());
-     
+
       candidate->TrimmedP4[0].SetPtEtaPhiM(trimmed_jet.pt(), trimmed_jet.eta(), trimmed_jet.phi(), trimmed_jet.m());
-        
-      // four hardest subjets 
+
+      // four hardest subjets
       subjets.clear();
       subjets = trimmed_jet.pieces();
       subjets = sorted_by_pt(subjets);
-      
+
       candidate->NSubJetsTrimmed = subjets.size();
 
       for (size_t i = 0; i < subjets.size() and i < 4; i++)
       {
-	    if(subjets.at(i).pt() < 0) continue ; 
+	    if(subjets.at(i).pt() < 0) continue ;
  	    candidate->TrimmedP4[i+1].SetPtEtaPhiM(subjets.at(i).pt(), subjets.at(i).eta(), subjets.at(i).phi(), subjets.at(i).m());
       }
     }
-    
-    
+
+
     //------------------------------------
     // Pruning
     //------------------------------------
-    
-    
+
+
     if(fComputePruning)
     {
 
@@ -509,36 +516,36 @@ void FastJetFinder::Process()
       fastjet::PseudoJet pruned_jet = pruner(*itOutputList);
 
       candidate->PrunedP4[0].SetPtEtaPhiM(pruned_jet.pt(), pruned_jet.eta(), pruned_jet.phi(), pruned_jet.m());
-         
-      // four hardest subjet 
+
+      // four hardest subjet
       subjets.clear();
       subjets = pruned_jet.pieces();
       subjets = sorted_by_pt(subjets);
-      
+
       candidate->NSubJetsPruned = subjets.size();
 
       for (size_t i = 0; i < subjets.size() and i < 4; i++)
       {
-	    if(subjets.at(i).pt() < 0) continue ; 
+	    if(subjets.at(i).pt() < 0) continue ;
   	    candidate->PrunedP4[i+1].SetPtEtaPhiM(subjets.at(i).pt(), subjets.at(i).eta(), subjets.at(i).phi(), subjets.at(i).m());
       }
 
-    } 
-     
+    }
+
     //------------------------------------
     // SoftDrop
     //------------------------------------
-   
+
     if(fComputeSoftDrop)
     {
-    
+
       contrib::SoftDrop softDrop(fBetaSoftDrop,fSymmetryCutSoftDrop,fR0SoftDrop);
       fastjet::PseudoJet softdrop_jet = softDrop(*itOutputList);
-      
+
       candidate->SoftDroppedP4[0].SetPtEtaPhiM(softdrop_jet.pt(), softdrop_jet.eta(), softdrop_jet.phi(), softdrop_jet.m());
-        
-      // four hardest subjet 
-      
+
+      // four hardest subjet
+
       subjets.clear();
       subjets    = softdrop_jet.pieces();
       subjets    = sorted_by_pt(subjets);
@@ -548,31 +555,68 @@ void FastJetFinder::Process()
 
       for (size_t i = 0; i < subjets.size()  and i < 4; i++)
       {
-	    if(subjets.at(i).pt() < 0) continue ; 
+	    if(subjets.at(i).pt() < 0) continue ;
   	    candidate->SoftDroppedP4[i+1].SetPtEtaPhiM(subjets.at(i).pt(), subjets.at(i).eta(), subjets.at(i).phi(), subjets.at(i).m());
             if(i==0) candidate->SoftDroppedSubJet1 = candidate->SoftDroppedP4[i+1];
             if(i==1) candidate->SoftDroppedSubJet2 = candidate->SoftDroppedP4[i+1];
       }
     }
-  
+
     // --- compute N-subjettiness with N = 1,2,3,4,5 ----
 
     if(fComputeNsubjettiness)
     {
-     
+
       Nsubjettiness nSub1(1, *fAxesDef, *fMeasureDef);
       Nsubjettiness nSub2(2, *fAxesDef, *fMeasureDef);
       Nsubjettiness nSub3(3, *fAxesDef, *fMeasureDef);
       Nsubjettiness nSub4(4, *fAxesDef, *fMeasureDef);
       Nsubjettiness nSub5(5, *fAxesDef, *fMeasureDef);
-     
+
       candidate->Tau[0] = nSub1(*itOutputList);
       candidate->Tau[1] = nSub2(*itOutputList);
       candidate->Tau[2] = nSub3(*itOutputList);
       candidate->Tau[3] = nSub4(*itOutputList);
       candidate->Tau[4] = nSub5(*itOutputList);
-         
+
     }
+
+    // --- compute HEPTopTagger
+
+    if(fComputeHEPTopTagger)
+    {
+      HEPTopTagger::HEPTopTagger tagger( *itOutputList );
+
+      // Unclustering, Filtering & Subjet Settings
+      tagger.set_max_subjet_mass(30.);
+      tagger.set_mass_drop_threshold(0.8);
+      tagger.set_filtering_R(0.3);
+      tagger.set_filtering_n(5);
+      tagger.set_filtering_minpt_subjet(30.);
+
+      // How to select among candidates
+      tagger.set_mode(HEPTopTagger::TWO_STEP_FILTER);
+
+      // Requirements to accept a candidate
+      tagger.set_top_minpt(200);
+      tagger.set_top_mass_range(150., 200.);
+      tagger.set_fw(0.15);
+
+      tagger.run();
+
+      tmpIsTop = tagger.is_maybe_top();
+      
+
+      /*fastjet::PseudoJet topCandidate = tagger.t();
+
+      candidate->topCandP4.SetPtEtaPhiM(topCandidate.pt(), topCandidate.eta(), topCandidate.phi(), topCandidate.m());*/
+      //if ( tagger.is_tagged() ){
+      //cout << "pt " << tagger.t().perp() << " " << tagger.is_maybe_top() << std::endl;
+      //}
+    }
+    //std::cout << "tmpIsTop " << tmpIsTop << '\n';
+    candidate->IsTop = tmpIsTop;
+    //std::cout << "FastJetFinder " << candidate->IsTop << '\n';
 
     fOutputArray->Add(candidate);
   }

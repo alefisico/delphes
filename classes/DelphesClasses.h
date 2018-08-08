@@ -407,7 +407,7 @@ public:
   Double_t ExclYmerge34;
   Double_t ExclYmerge45;
   Double_t ExclYmerge56;
-  
+
   TRefArray Constituents; // references to constituents
   TRefArray Particles; // references to generated particles
 
@@ -416,6 +416,9 @@ public:
 
   TLorentzVector P4() const;
   TLorentzVector Area;
+
+  Int_t IsTop;
+
 
   ClassDef(Jet, 3)
 };
@@ -654,7 +657,20 @@ public:
   Double_t ExclYmerge34;
   Double_t ExclYmerge45;
   Double_t ExclYmerge56;
-      
+
+  // HEPTopTagger
+  Int_t IsTop;
+  /*Int_t isMasscutPassed;
+  Int_t isMinPtcutPassed;
+  Int_t isTagged;
+  Double_t deltaTop;
+  Double_t djsum;
+  Double_t prunedMass;
+  Double_t unfilteredMass;
+  Double_t fRec;
+  TLorentzVector topCandP4;*/
+
+
   static CompBase *fgCompare; //!
   const CompBase *GetCompare() const { return fgCompare; }
 
@@ -677,5 +693,3 @@ private:
 };
 
 #endif // DelphesClasses_h
-
-
