@@ -417,10 +417,21 @@ public:
   TLorentzVector P4() const;
   TLorentzVector Area;
 
-  Int_t IsTop;
+  Int_t HTT_isTop;
+  Int_t HTT_isTagged;
+  Double_t HTT_prunedMass;
+  Double_t HTT_unfilteredMass;
+  Double_t HTT_fRec;
+  TLorentzVector HTT_topCandP4;
+  /* TLorentzVector HTT_bCandP4;
+  TLorentzVector HTT_WCandP4;
+  TLorentzVector HTT_W1CandP4;
+  TLorentzVector HTT_W2CandP4;*/
+  TLorentzVector HTT_topSubjetsP4[3];
+  Double_t HTT_Ropt;
+  Double_t HTT_Ropt_calc;
 
-
-  ClassDef(Jet, 3)
+  ClassDef(Jet, 4)
 };
 
 //---------------------------------------------------------------------------
@@ -659,17 +670,19 @@ public:
   Double_t ExclYmerge56;
 
   // HEPTopTagger
-  Int_t IsTop;
-  /*Int_t isMasscutPassed;
-  Int_t isMinPtcutPassed;
-  Int_t isTagged;
-  Double_t deltaTop;
-  Double_t djsum;
-  Double_t prunedMass;
-  Double_t unfilteredMass;
-  Double_t fRec;
-  TLorentzVector topCandP4;*/
-
+  Int_t HTT_isTop;
+  Int_t HTT_isTagged;
+  Double_t HTT_prunedMass;
+  Double_t HTT_unfilteredMass;
+  Double_t HTT_fRec;
+  TLorentzVector HTT_topCandP4;
+  /*TLorentzVector HTT_bCandP4;
+  TLorentzVector HTT_WCandP4;
+  TLorentzVector HTT_W1CandP4;
+  TLorentzVector HTT_W2CandP4;*/
+  TLorentzVector HTT_topSubjetsP4[3];
+  Double_t HTT_Ropt;
+  Double_t HTT_Ropt_calc;
 
   static CompBase *fgCompare; //!
   const CompBase *GetCompare() const { return fgCompare; }

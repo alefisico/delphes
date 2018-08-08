@@ -706,9 +706,22 @@ void TreeWriter::ProcessJets(ExRootTreeBranch *branch, TObjArray *array)
     FillParticles(candidate, &entry->Particles);
 
     // HEPTopTagger
-    //std::cout << candidate->IsTop << '\n';
-    entry->IsTop = candidate->IsTop;
-    //entry->ExclYmerge56 = candidate->IsTop;
+    entry->HTT_isTop = candidate->HTT_isTop;
+    entry->HTT_isTagged = candidate->HTT_isTagged;
+    entry->HTT_prunedMass = candidate->HTT_prunedMass;
+    entry->HTT_unfilteredMass = candidate->HTT_unfilteredMass;
+    entry->HTT_fRec = candidate->HTT_fRec;
+    entry->HTT_topCandP4 = candidate->HTT_topCandP4;
+    /*entry->HTT_bCandP4 = candidate->HTT_bCandP4;
+    entry->HTT_WCandP4 = candidate->HTT_WCandP4;
+    entry->HTT_W1CandP4 = candidate->HTT_W1CandP4;
+    entry->HTT_W2CandP4 = candidate->HTT_W2CandP4;*/
+    for(i = 0; i < 3; i++) {
+      entry->HTT_topSubjetsP4[i] = candidate->HTT_topSubjetsP4[i];
+    }
+    entry->HTT_Ropt = candidate->HTT_Ropt;
+    entry->HTT_Ropt_calc = candidate->HTT_Ropt_calc;
+
 
   }
 }

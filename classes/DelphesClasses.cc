@@ -160,7 +160,13 @@ Candidate::Candidate() :
   ExclYmerge34(0),
   ExclYmerge45(0),
   ExclYmerge56(0),
-  IsTop(0),
+  HTT_isTop(0),
+  HTT_isTagged(0),
+  HTT_prunedMass(0.0),
+  HTT_unfilteredMass(0.0),
+  HTT_fRec(0.0),
+  HTT_Ropt(0.0),
+  HTT_Ropt_calc(0.0),
   fFactory(0),
   fArray(0)
 {
@@ -189,6 +195,16 @@ Candidate::Candidate() :
     TrimmedP4[i].SetXYZT(0.0, 0.0, 0.0, 0.0);
     PrunedP4[i].SetXYZT(0.0, 0.0, 0.0, 0.0);
     SoftDroppedP4[i].SetXYZT(0.0, 0.0, 0.0, 0.0);
+  }
+
+  HTT_topCandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);
+  /*HTT_bCandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);  /// apparently does not work 
+  HTT_WCandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);
+  HTT_W1CandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);
+  HTT_W2CandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);*/
+
+  for(i = 0; i < 3; ++i) {
+    HTT_topSubjetsP4[i].SetXYZT(0.0, 0.0, 0.0, 0.0);
   }
 }
 
@@ -365,8 +381,6 @@ void Candidate::Copy(TObject &obj) const
   object.SoftDroppedSubJet1 = SoftDroppedSubJet1;
   object.SoftDroppedSubJet2 = SoftDroppedSubJet2;
 
-  object.IsTop = IsTop;
-
   object.fFactory = fFactory;
   object.fArray = 0;
 
@@ -490,7 +504,6 @@ void Candidate::Clear(Option_t* option)
   NSubJetsPruned = 0;
   NSubJetsSoftDropped = 0;
 
-  IsTop = 0;
 
   fArray = 0;
 }

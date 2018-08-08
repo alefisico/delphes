@@ -692,6 +692,16 @@ module FastJetFinder FatCA15JetFinder {
 
   set JetPTMin 200.0
   set ComputeHEPTopTagger 1
+
+  set ComputeNsubjettiness 1
+  set Beta 1.0
+  set AxisMode 4
+
+  set ComputeSoftDrop 1
+  set BetaSoftDrop 0.0
+  set SymmetryCutSoftDrop 0.1
+  set R0SoftDrop 0.8
+
 }
 
 ##################

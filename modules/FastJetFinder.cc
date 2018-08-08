@@ -341,7 +341,6 @@ void FastJetFinder::Process()
   Double_t excl_ymerge34 = 0.0;
   Double_t excl_ymerge45 = 0.0;
   Double_t excl_ymerge56 = 0.0;
-  Int_t tmpIsTop = 0;
 
   DelphesFactory *factory = GetFactory();
 
@@ -478,7 +477,6 @@ void FastJetFinder::Process()
     //------------------------------------
     // Trimming
     //------------------------------------
-
     if(fComputeTrimming)
     {
 
@@ -604,19 +602,37 @@ void FastJetFinder::Process()
 
       tagger.run();
 
-      tmpIsTop = tagger.is_maybe_top();
-      
+      candidate->HTT_isTop = tagger.is_maybe_top();
+      candidate->HTT_isTagged = tagger.is_tagged();
+      candidate->HTT_prunedMass = tagger.pruned_mass();
+      candidate->HTT_unfilteredMass = tagger.unfiltered_mass();
+      //candidate->HTT_fRec = tagger.f_rec();
 
-      /*fastjet::PseudoJet topCandidate = tagger.t();
 
-      candidate->topCandP4.SetPtEtaPhiM(topCandidate.pt(), topCandidate.eta(), topCandidate.phi(), topCandidate.m());*/
+      fastjet::PseudoJet topCandidate = tagger.t();
+      candidate->HTT_topCandP4.SetPtEtaPhiM(topCandidate.pt(), topCandidate.eta(), topCandidate.phi(), topCandidate.m());
+      //fastjet::PseudoJet WCandidate = tagger.W();
+      //candidate->HTT_WCandP4.SetPtEtaPhiM(WCandidate.pt(), WCandidate.eta(), WCandidate.phi(), WCandidate.m());
+      //fastjet::PseudoJet bCandidate = tagger.b();   /// apparently does not work
+      //candidate->HTT_bCandP4.SetPtEtaPhiM(bCandidate.pt(), bCandidate.eta(), bCandidate.phi(), bCandidate.m());
+      //fastjet::PseudoJet W1Candidate = tagger.W1();
+      //candidate->HTT_W1CandP4.SetPtEtaPhiM(W1Candidate.pt(), W1Candidate.eta(), W1Candidate.phi(), W1Candidate.m());
+      //fastjet::PseudoJet W2Candidate = tagger.W2();
+      //candidate->HTT_W2CandP4.SetPtEtaPhiM(W2Candidate.pt(), W2Candidate.eta(), W2Candidate.phi(), W2Candidate.m());
+
+      subjets.clear();
+      subjets = tagger.top_subjets();
+      for (size_t i = 0; i < subjets.size(); i++) {
+        candidate->HTT_topSubjetsP4[i].SetPtEtaPhiM(subjets.at(i).pt(), subjets.at(i).eta(), subjets.at(i).phi(), subjets.at(i).m());
+      }
+
+      candidate->HTT_Ropt = tagger.Ropt();
+      candidate->HTT_Ropt_calc = tagger.Ropt_calc();
+
       //if ( tagger.is_tagged() ){
       //cout << "pt " << tagger.t().perp() << " " << tagger.is_maybe_top() << std::endl;
       //}
     }
-    //std::cout << "tmpIsTop " << tmpIsTop << '\n';
-    candidate->IsTop = tmpIsTop;
-    //std::cout << "FastJetFinder " << candidate->IsTop << '\n';
 
     fOutputArray->Add(candidate);
   }
