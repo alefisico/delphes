@@ -203,9 +203,10 @@ Candidate::Candidate() :
   HTT_W1CandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);
   HTT_W2CandP4.SetXYZT(0.0, 0.0, 0.0, 0.0);*/
 
-  for(i = 0; i < 3; ++i) {
-    HTT_topSubjetsP4[i].SetXYZT(0.0, 0.0, 0.0, 0.0);
-  }
+  HTT_topSubjetsP4sj1.SetXYZT(0.0, 0.0, 0.0, 0.0);
+  HTT_topSubjetsP4sj2.SetXYZT(0.0, 0.0, 0.0, 0.0);
+  HTT_topSubjetsP4sj3.SetXYZT(0.0, 0.0, 0.0, 0.0);
+
 }
 
 //------------------------------------------------------------------------------

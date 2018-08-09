@@ -627,7 +627,10 @@ void FastJetFinder::Process()
       subjets.clear();
       subjets = tagger.top_subjets();
       for (size_t i = 0; i < subjets.size(); i++) {
-        candidate->HTT_topSubjetsP4[i].SetPtEtaPhiM(subjets.at(i).pt(), subjets.at(i).eta(), subjets.at(i).phi(), subjets.at(i).m());
+        if (i==0) candidate->HTT_topSubjetsP4sj1.SetPtEtaPhiM(subjets.at(i).pt(), subjets.at(i).eta(), subjets.at(i).phi(), subjets.at(i).m());
+        if (i==1) candidate->HTT_topSubjetsP4sj2.SetPtEtaPhiM(subjets.at(i).pt(), subjets.at(i).eta(), subjets.at(i).phi(), subjets.at(i).m());
+        if (i==2) candidate->HTT_topSubjetsP4sj3.SetPtEtaPhiM(subjets.at(i).pt(), subjets.at(i).eta(), subjets.at(i).phi(), subjets.at(i).m());
+
       }
 
       candidate->HTT_Ropt = tagger.Ropt();

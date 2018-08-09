@@ -716,9 +716,10 @@ void TreeWriter::ProcessJets(ExRootTreeBranch *branch, TObjArray *array)
     entry->HTT_WCandP4 = candidate->HTT_WCandP4;
     entry->HTT_W1CandP4 = candidate->HTT_W1CandP4;
     entry->HTT_W2CandP4 = candidate->HTT_W2CandP4;*/
-    for(i = 0; i < 3; i++) {
-      entry->HTT_topSubjetsP4[i] = candidate->HTT_topSubjetsP4[i];
-    }
+    entry->HTT_topSubjetsP4sj1 = candidate->HTT_topSubjetsP4sj1;
+    entry->HTT_topSubjetsP4sj2 = candidate->HTT_topSubjetsP4sj2;
+    entry->HTT_topSubjetsP4sj3 = candidate->HTT_topSubjetsP4sj3;
+
     entry->HTT_Ropt = candidate->HTT_Ropt;
     entry->HTT_Ropt_calc = candidate->HTT_Ropt_calc;
 

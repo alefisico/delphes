@@ -427,7 +427,9 @@ public:
   TLorentzVector HTT_WCandP4;
   TLorentzVector HTT_W1CandP4;
   TLorentzVector HTT_W2CandP4;*/
-  TLorentzVector HTT_topSubjetsP4[3];
+  TLorentzVector HTT_topSubjetsP4sj1;
+  TLorentzVector HTT_topSubjetsP4sj2;
+  TLorentzVector HTT_topSubjetsP4sj3;
   Double_t HTT_Ropt;
   Double_t HTT_Ropt_calc;
 
@@ -659,6 +661,7 @@ public:
   TLorentzVector PrunedP4[5]; // first entry (i = 0) is the total Pruned Jet 4-momenta and from i = 1 to 4 are the pruned subjets 4-momenta
   TLorentzVector SoftDroppedP4[5]; // first entry (i = 0) is the total SoftDropped Jet 4-momenta and from i = 1 to 4 are the pruned subjets 4-momenta
 
+
   Int_t NSubJetsTrimmed; // number of subjets trimmed
   Int_t NSubJetsPruned; // number of subjets pruned
   Int_t NSubJetsSoftDropped; // number of subjets soft-dropped
@@ -680,7 +683,9 @@ public:
   TLorentzVector HTT_WCandP4;
   TLorentzVector HTT_W1CandP4;
   TLorentzVector HTT_W2CandP4;*/
-  TLorentzVector HTT_topSubjetsP4[3];
+  TLorentzVector HTT_topSubjetsP4sj1;
+  TLorentzVector HTT_topSubjetsP4sj2;
+  TLorentzVector HTT_topSubjetsP4sj3;
   Double_t HTT_Ropt;
   Double_t HTT_Ropt_calc;
 
