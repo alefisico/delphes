@@ -1355,8 +1355,9 @@ module StatusPidFilter GenParticleFilter {
 
 module TreeWriter TreeWriter {
 # add Branch InputArray BranchName BranchClass
-  add Branch GenParticleFilter/filteredParticles Particle GenParticle
-  add Branch PileUpMerger/vertices Vertex Vertex
+#  add Branch GenParticleFilter/filteredParticles Particle GenParticle
+  add Branch Delphes/allParticles Particle GenParticle
+#  add Branch PileUpMerger/vertices Vertex Vertex
 
   add Branch GenJetFinder/jets GenJet Jet
   add Branch GenJetFinderAK8/jetsAK8 GenJetAK8 Jet
@@ -1366,14 +1367,14 @@ module TreeWriter TreeWriter {
 #  add Branch ECal/eflowPhotons EFlowPhoton Tower
 #  add Branch HCal/eflowNeutralHadrons EFlowNeutralHadron Tower
 
-  add Branch PhotonEfficiency/photons Photon Photon
+#  add Branch PhotonEfficiency/photons Photon Photon
   add Branch ElectronEfficiency/electrons Electron Electron
-  add Branch MuonLooseIdEfficiency/muons MuonLoose Muon
+#  add Branch MuonLooseIdEfficiency/muons MuonLoose Muon
   add Branch MuonTightIdEfficiency/muons MuonTight Muon
 
   add Branch JetEnergyScale/jets Jet Jet
 #  add Branch FatJetFinder/jets FatJet Jet
-  add Branch JetEnergyScalePUPPI/jets JetPUPPI Jet
+#  add Branch JetEnergyScalePUPPI/jets JetPUPPI Jet
   add Branch JetEnergyScaleAK8/jets JetAK8 Jet
   add Branch JetEnergyScaleCA15/jets JetCA15 Jet
   add Branch JetEnergyScalePUPPIAK8/jets JetPUPPIAK8 Jet
