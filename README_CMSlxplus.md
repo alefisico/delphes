@@ -13,6 +13,8 @@ This instructions are based on [this recipe](https://twiki.cern.ch/twiki/bin/vie
 cmsrel CMSSW_9_1_0_pre3
 cd CMSSW_9_1_0_pre3/src/
 cmsenv
+git cms-init
+git cms-addpkg GeneratorInterface/LHEInterface/
 cd ../../
 ```
 1. Clone this version of delphes, which includes the HTT and some files to run some jobs:
