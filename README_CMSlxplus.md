@@ -1,8 +1,10 @@
 # Run delphes in lxplus with CMSSW enviroment
 
+_Disclaimer:_ This recipe works for a specific process in CMSSW. Use it with caution.
+
 This instructions are based on [this recipe](https://twiki.cern.ch/twiki/bin/viewauth/CMS/DelphesUPG). This version of delphes contains a version of the fastjet package including the [HEPToptagger](http://www.thphys.uni-heidelberg.de/~plehn/index.php?show=heptoptagger&visible=tools)
 
-## Instructions
+## Instructions to compile Delphes
 
 1. Log in to lxplus.cern.ch
 1. Go to your working directory, create a new folder, go there
@@ -36,8 +38,29 @@ make -j 4 HAS_PYTHIA8=true DelphesPythia8
 
 ## Run ttbar or ttH(bb) jobs
 
+1. Update the delphes repo. Inside the `delphes/` directory:
+```
+git checkout myV0
+```
 1. Go to `cd examples/PythiaSamples/`
 1. There you have two files: configLHE_*.cmnd and run_jobs_*.sh. The configLHE_* files contain already the information that you need for each process. Do not change those files
+1. Set your proxy:
+```
+voms-proxy-init -voms cms
+```
+1. Copy the name of your proxy file.
+
+### Send several jobs in parallel
+
+1. Open `run_severaljobs_ttHbb.sh`.
+1. Modify the first part of the script with your variables. Each parameter is described in the script. _Do not forget to change the proxy name_
+1. Once your parameters are there. just run:
+```
+source run_severaljobs_ttHbb.sh
+```
+
+
+### Send a bunch of jobs one after another (stupid way)
 1. To send jobs to the batch system, you need the run_jobs_*.sh files. There you can change the `TOTALNEVENTS` and the `NJOBS` variable. The current setup runs 50 jobs with 10k events each. Finaly remove the number 46 from [line24](https://github.com/alefisico/delphes/blob/myV0/examples/PythiaSamples/run_jobs_ttbar.sh#L24).
 1. Create a `ttbar` and `ttHbb` folders
 1. Send your jobs to the batch system:
