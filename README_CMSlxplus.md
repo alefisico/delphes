@@ -40,7 +40,7 @@ make -j 4 HAS_PYTHIA8=true DelphesPythia8
 
 1. Update the delphes repo. Inside the `delphes/` directory:
 ```
-git checkout myV0
+git checkout tags/v02
 ```
 1. Go to `cd examples/PythiaSamples/`
 1. There you have two files: configLHE_*.cmnd and run_jobs_*.sh. The configLHE_* files contain already the information that you need for each process. Do not change those files
