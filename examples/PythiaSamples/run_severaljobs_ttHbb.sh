@@ -2,9 +2,9 @@
 
 ##### Parameters to modify
 SAMPLE="ttbar"            #### can be or ttHbb or ttbar
-TOTALNEVENTS=500000       #### total number of events
-NJOBS=50                  #### number of jobs submitted in parallel
-FIRSTJOB=1000              #### this is just a label, your jobs will be named ttbar_FIRSTJOB
+TOTALNEVENTS=300000       #### total number of events
+NJOBS=15                  #### number of jobs submitted in parallel
+FIRSTJOB=415              #### this is just a label, your jobs will be named ttbar_FIRSTJOB
 CMSDIR="/afs/cern.ch/work/a/algomez/Generation/CMSSW_9_1_0_pre3/src/"  #### change with your CMSSW release directory
 WORKINGDIR="/afs/cern.ch/work/a/algomez/Generation/delphes/examples/PythiaSamples/"${SAMPLE}"/" #### change with your Delphes directory
 USERPROXY=${HOME}/x509up_u15148   #### change with your proxy name
@@ -60,7 +60,7 @@ sed -i 's/Main:numberOfEvents = 100/Main:numberOfEvents = ${NEVENTS}/' configLHE
 sed -i 's|cmsgrid_final.lhe|'${NEWDIR}'\/cmsgrid_final_'${i}'.lhe|' configLHE_${i}.cmnd
 
 rm ${OUTPUTFile}_${i}.root
-${WORKINGDIR}../../../DelphesPythia8 ${WORKINGDIR}../../../cards/CMS_PhaseII/CMS_PhaseII_Substructure_200PU_withHTT.tcl configLHE_${i}.cmnd ${OUTPUTFile}_${i}.root
+${WORKINGDIR}../../../DelphesPythia8 ${WORKINGDIR}../../../cards/CMS_PhaseII/CMS_PhaseII_Substructure_200PU_withHTT_NoEnergyScale.tcl configLHE_${i}.cmnd ${OUTPUTFile}_${i}.root
 
 """ >> ${FILETOSUBMIT}
   chmod +x ${FILETOSUBMIT}
